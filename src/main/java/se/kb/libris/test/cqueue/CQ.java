@@ -29,10 +29,10 @@ public class CQ  {
         public synchronized Work get() throws InterruptedException {
             if (current == MAX_ITERATIONS) return null;
             
-            if (System.currentTimeMillis() - lastRequest > 5)
+            if (System.currentTimeMillis() - lastRequest > 0)
                 cq.createThread();
             
-            Thread.sleep((long)(10*Math.random()));
+            //Thread.sleep((long)(10));
             lastRequest = System.currentTimeMillis();
             return new Work(current++, String.valueOf(current-1));
         }
@@ -68,7 +68,7 @@ public class CQ  {
                 while (true) {
                     Work w = producer.get();
                     if (w == null) return;
-                    Thread.sleep((long)(100*Math.random()));
+                    Thread.sleep((long)(10*Math.random()));
                     w.out = w.in + "/" + w.in;
                     synchronizer.put(w);
                 }
@@ -78,14 +78,14 @@ public class CQ  {
         }
     }
     
-    public static final int MAX_THREADS = Runtime.getRuntime().availableProcessors();
+    public static int MAX_THREADS = Runtime.getRuntime().availableProcessors();
     Producer producer = new Producer();
     Synchronizer synchronizer = new Synchronizer();
     public int nThreads = 0;
     
     private synchronized void createThread() {
         if (nThreads < MAX_THREADS) {
-            System.out.println("Creating thread");
+            System.out.println("Creating thread " + nThreads + " / " + MAX_THREADS);
             new Worker(producer, synchronizer).start();
             nThreads += 1;
         } else {
@@ -98,7 +98,10 @@ public class CQ  {
         createThread();
     }
     
-    public static void main( String[] args ) {
+    public static void main(String[] args) {
+        if (args.length == 1)
+            CQ.MAX_THREADS = Integer.parseInt(args[0]);
+            
         CQ cq = new CQ();
     }
 }
