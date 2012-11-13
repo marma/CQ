@@ -50,7 +50,8 @@ public class CQ <SOURCE, RESULT>  {
     }
     
     public void join() throws InterruptedException {
-        for (int i=0;i<threads.size();i++)
+        for (int i=0;i<threads.size();i++) {
             threads.elementAt(i).join();
+        }
     }
 }
