@@ -5,23 +5,23 @@ import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class CQ <SOURCE, RESULT>  {
+public class CQ  {
     int MAX_THREADS = Runtime.getRuntime().availableProcessors();
-    Producer<SOURCE, RESULT> producer = null;
-    Consumer<SOURCE, RESULT> consumer = null;
-    Synchronizer<SOURCE, RESULT> synchronizer = null;
-    Worker<SOURCE, RESULT> workerPrototype = null;
+    Producer producer = null;
+    Consumer consumer = null;
+    Synchronizer synchronizer = null;
+    Worker workerPrototype = null;
     Vector<Worker> threads = new Vector<Worker>(MAX_THREADS);
     
-    public CQ(Producer<SOURCE, RESULT> _producer, Consumer<SOURCE, RESULT> _consumer, Worker<SOURCE, RESULT> _workerPrototype) {
+    public CQ(Producer _producer, Consumer _consumer, Worker _workerPrototype) {
         producer = _producer;
         producer.setCQ(this);
         consumer = _consumer;
-        synchronizer = new Synchronizer<SOURCE, RESULT>(consumer);
+        synchronizer = new Synchronizer(consumer);
         workerPrototype = _workerPrototype;
     }
     
-    public CQ(Producer<SOURCE, RESULT> _producer, Consumer<SOURCE, RESULT> _consumer, Worker<SOURCE, RESULT> _workerPrototype, int _maxThreads) {
+    public CQ(Producer _producer, Consumer _consumer, Worker _workerPrototype, int _maxThreads) {
         this(_producer, _consumer, _workerPrototype);
         MAX_THREADS = _maxThreads;
     }
@@ -29,7 +29,7 @@ public class CQ <SOURCE, RESULT>  {
     public synchronized void createThread() {
         if (threads.size() < MAX_THREADS) {
             try {
-                System.out.println("Creating thread " + threads.size() + " / " + MAX_THREADS);
+                //System.out.println("Creating thread " + threads.size() + " / " + MAX_THREADS);
                 threads.add(workerPrototype.getClass().newInstance().setProducer(producer).setSynchronizer(synchronizer));
                 threads.lastElement().start();
             } catch (InstantiationException ex) {
@@ -38,11 +38,11 @@ public class CQ <SOURCE, RESULT>  {
                 Logger.getLogger(CQ.class.getName()).log(Level.SEVERE, null, ex);
             }
         } else {
-            System.out.println("At max thread " + threads.size());
+            //System.out.println("At max thread " + threads.size());
         }
     }
     
-    public CQ<SOURCE, RESULT> start() {
+    public CQ start() {
         if (threads.isEmpty())
             createThread();
         

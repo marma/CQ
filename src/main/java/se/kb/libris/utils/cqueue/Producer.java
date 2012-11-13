@@ -1,14 +1,14 @@
 package se.kb.libris.utils.cqueue;
 
-public abstract class Producer<SOURCE, RESULT> {
+public abstract class Producer {
     private static int MAX_WAIT = 1;
     private Long current = 1L;
-    private CQ<SOURCE, RESULT> cq = null;
+    private CQ cq = null;
     private long t = System.currentTimeMillis();
     
-    public synchronized Work<SOURCE, RESULT> get() {
+    public synchronized Work get() {
         if (System.currentTimeMillis() - t > MAX_WAIT) cq.createThread();
-        Work<SOURCE, RESULT> w = getWork();
+        Work w = getWork();
         
         if (w != null)
             w.setSeqNo(current++);
@@ -18,11 +18,11 @@ public abstract class Producer<SOURCE, RESULT> {
         return w;
     }
     
-    public Producer<SOURCE, RESULT> setCQ(CQ<SOURCE, RESULT> _cq) {
+    public Producer setCQ(CQ _cq) {
         cq = _cq;
         
         return this;
     }
     
-    public abstract Work<SOURCE, RESULT> getWork();
+    public abstract Work getWork();
 } 

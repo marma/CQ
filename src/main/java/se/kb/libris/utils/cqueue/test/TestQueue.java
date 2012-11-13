@@ -9,7 +9,7 @@ import se.kb.libris.utils.cqueue.Work;
 import se.kb.libris.utils.cqueue.Worker;
 
 public class TestQueue {
-    public static class MyWorker<SOURCE, RESULT> extends Worker<SOURCE, RESULT> {
+    public static class MyWorker extends Worker {
         @Override
         public Work doWork(Work work) {
             try {
@@ -24,20 +24,20 @@ public class TestQueue {
     }
     
     public static void main(String args[]) throws Exception {
-        new CQ<String, String>(
-            new Producer<String, String>() {
+        new CQ(
+            new Producer() {
                 int n = 0;
                 
                 @Override
-                public synchronized Work<String, String> getWork() {
+                public synchronized Work getWork() {
                     if (n++ >= 100) return null;
-                    return new Work<String, String>(String.valueOf(System.currentTimeMillis()));
+                    return new Work(String.valueOf(System.currentTimeMillis()));
                 }
-            }, new Consumer<String, String>() {
+            }, new Consumer() {
                 @Override
-                public void consume(Work<String, String> work) {
+                public void consume(Work work) {
                     System.out.println(work.seqNo + " " + work.source + " -> " + work.result);
                 }
-            }, new MyWorker<String, String>()).start().join();
+            }, new MyWorker()).start().join();
     }
 }

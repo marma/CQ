@@ -1,11 +1,11 @@
 package se.kb.libris.utils.cqueue;
 
-public class Work<SOURCE, RESULT> {
+public class Work {
     public Long seqNo;
-    public SOURCE source = null;
-    public RESULT result = null;
+    public Object source = null;
+    public Object result = null;
         
-    public Work(SOURCE _source) {
+    public Work(Object _source) {
         source = _source;
     }
     

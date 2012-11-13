@@ -5,14 +5,14 @@ import java.util.Map;
 
 public class Synchronizer <SOURCE, RESULT> {
     Long currentSeqNo = Long.valueOf(1);
-    Map<Long, Work<SOURCE, RESULT>> buffer = new HashMap<Long, Work<SOURCE, RESULT>>();
-    Consumer<SOURCE, RESULT> consumer = null;
+    Map<Long, Work> buffer = new HashMap<Long, Work>();
+    Consumer consumer = null;
 
-    public Synchronizer(Consumer<SOURCE, RESULT> _consumer) {
+    public Synchronizer(Consumer _consumer) {
         consumer = _consumer;
     }
     
-    public synchronized void put(Work<SOURCE, RESULT> work) {
+    public synchronized void put(Work work) {
         buffer.put(work.seqNo, work);
 
         while (buffer.containsKey(currentSeqNo)) {

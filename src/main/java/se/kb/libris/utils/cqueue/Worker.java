@@ -3,28 +3,28 @@ package se.kb.libris.utils.cqueue;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public abstract class Worker<SOURCE, RESULT> extends Thread {
+public abstract class Worker extends Thread {
     Producer producer = null;
     Synchronizer synchronizer = null;
 
-    public Worker<SOURCE, RESULT> setProducer(Producer<SOURCE, RESULT> _producer) {
+    public Worker setProducer(Producer _producer) {
         producer = _producer;
         
         return this;
     }
     
-    public Worker<SOURCE, RESULT> setSynchronizer(Synchronizer<SOURCE, RESULT> _synchronizer) {
+    public Worker setSynchronizer(Synchronizer _synchronizer) {
         synchronizer = _synchronizer;
         
         return this;
     }
     
-    public abstract Work<SOURCE, RESULT> doWork(Work<SOURCE, RESULT> work);
+    public abstract Work doWork(Work work);
 
     @Override
     public void run() {
         while (true) {
-            Work<SOURCE, RESULT> w = producer.get();
+            Work w = producer.get();
             
             if (w == null) return;
 
