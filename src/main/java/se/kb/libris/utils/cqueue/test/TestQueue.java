@@ -7,7 +7,7 @@ public class TestQueue {
     public static void main(String args[]) throws Exception {
         final int MAX_ITERATIONS = 10000;
         
-        for (int i=0;i<12;i++) {
+        for (int i=0;i<6;i++) {
             int maxThreads = (int)Math.pow(2, i);
             long t0 = System.currentTimeMillis();
 
@@ -16,7 +16,7 @@ public class TestQueue {
                     int n = 0;
 
                     @Override
-                    public synchronized Work getWork() {
+                    public Work getWork() {
                         if (n++ >= MAX_ITERATIONS) return null;
                         return new Work(String.valueOf(System.currentTimeMillis()));
                     }

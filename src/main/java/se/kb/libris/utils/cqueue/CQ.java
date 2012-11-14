@@ -1,11 +1,10 @@
 package se.kb.libris.utils.cqueue;
 
-import java.lang.reflect.Type;
 import java.util.Vector;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class CQ  {
+    public static int OK = 0x1;
+    public static int ERROR = 0x2;
     int MAX_THREADS = Runtime.getRuntime().availableProcessors();
     int MIN_THREADS = 1;
     Producer producer = null;
