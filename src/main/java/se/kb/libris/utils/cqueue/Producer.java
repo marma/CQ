@@ -6,7 +6,7 @@ public abstract class Producer {
     private CQ cq = null;
     private long t = System.currentTimeMillis();
     
-    public synchronized Work get() {
+    public final synchronized Work get() {
         if (System.currentTimeMillis() - t > MAX_WAIT) cq.createThread();
         Work w = getWork();
         
