@@ -7,6 +7,7 @@ import java.util.logging.Logger;
 
 public class CQ  {
     int MAX_THREADS = Runtime.getRuntime().availableProcessors();
+    int MIN_THREADS = 1;
     Producer producer = null;
     Consumer consumer = null;
     Synchronizer synchronizer = null;
@@ -26,19 +27,26 @@ public class CQ  {
         MAX_THREADS = _maxThreads;
     }
     
+    public CQ(Producer _producer, Consumer _consumer, WorkerFactory _workerFactory, int _maxThreads, int _minThreads) {
+        this(_producer, _consumer, _workerFactory);
+        MAX_THREADS = _maxThreads;
+        MIN_THREADS = _minThreads;
+    }
+    
     public synchronized void createThread() {
         if (threads.size() < MAX_THREADS) {
-            System.out.println("Creating thread " + threads.size() + " / " + MAX_THREADS);
+            //System.out.println("Creating thread " + threads.size() + " / " + MAX_THREADS);
             threads.add(workerFactory.createWorker().setProducer(producer).setSynchronizer(synchronizer));
             threads.lastElement().start();
         } else {
-            System.out.println("At max thread " + threads.size());
+            //System.out.println("At max thread " + threads.size());
         }
     }
     
     public CQ start() {
         if (threads.isEmpty())
-            createThread();
+            for (int i=0;i<MIN_THREADS;i++)
+                createThread();
         
         return this;
     }
