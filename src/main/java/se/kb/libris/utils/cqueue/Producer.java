@@ -1,5 +1,8 @@
 package se.kb.libris.utils.cqueue;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 public abstract class Producer {
     private static int MAX_WAIT = 1;
     private Long current = 1L;
@@ -8,8 +11,15 @@ public abstract class Producer {
     
     public final synchronized Work get() {
         if (System.currentTimeMillis() - t >= MAX_WAIT) cq.createThread();
-        Work w = getWork();
-        
+
+        Work w = null;
+
+        try {
+            w = getWork();
+        } catch (Exception ex) {
+            Logger.getLogger(Producer.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
         if (w != null)
             w.setSeqNo(current++);
         
@@ -24,5 +34,5 @@ public abstract class Producer {
         return this;
     }
     
-    public abstract Work getWork();
+    public abstract Work getWork() throws Exception;
 } 

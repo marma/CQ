@@ -1,6 +1,8 @@
 package se.kb.libris.utils.cqueue;
 
 import java.util.Vector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class CQ  {
     public static int OK = 0x1;
@@ -50,9 +52,12 @@ public class CQ  {
         return this;
     }
     
-    public void join() throws InterruptedException {
-        for (int i=0;i<threads.size();i++) {
-            threads.elementAt(i).join();
-        }
+    public void join() {
+        for (int i=0;i<threads.size();i++)
+            try {
+                threads.elementAt(i).join();
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
     }
 }

@@ -19,16 +19,25 @@ public abstract class Worker extends Thread {
         return this;
     }
     
-    public abstract Work doWork(Work work);
-
     @Override
     public void run() {
-        while (true) {
-            Work w = producer.get();
-            
-            if (w == null) return;
+        try {
+            while (true) {
+                Work w = producer.get();
 
-            synchronizer.put(doWork(w));
-        }
+                if (w == null) return;
+
+                try {
+                    doWork(w);
+                } catch (Exception e) {
+                    Logger.getLogger(Worker.class.getName()).log(Level.SEVERE, null, e);
+                }
+
+                synchronizer.put(w);
+            }
+        } catch (Exception e) {
+        }            
     }
+
+    public abstract Work doWork(Work work) throws Exception;
 }
