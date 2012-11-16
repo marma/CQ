@@ -28,7 +28,7 @@ public class CQ  {
         MAX_THREADS = _maxThreads;
     }
     
-    public CQ(Producer _producer, Consumer _consumer, WorkerFactory _workerFactory, int _maxThreads, int _minThreads) {
+    public CQ(Producer _producer, Consumer _consumer, WorkerFactory _workerFactory, int _minThreads, int _maxThreads) {
         this(_producer, _consumer, _workerFactory);
         MAX_THREADS = _maxThreads;
         MIN_THREADS = _minThreads;
